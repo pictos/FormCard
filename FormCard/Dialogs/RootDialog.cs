@@ -12,7 +12,7 @@ namespace FormCard.Dialogs
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
-
+            //
             return Task.CompletedTask;
         }
 
