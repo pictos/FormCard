@@ -18,14 +18,23 @@ namespace FormCard.Dialogs
 
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
-            var activity = await result as Activity;           
+            var activity = await result as Activity;
+
+            if (activity.Text.Contains("Valor X") || activity.Text.Contains("Valor A"))
+            {
+                await context.PostAsync("Fim do formulário <br/> Digite algo se quiser reiniciar ");
+                
+                return;
+            }
 
             var resposta = activity.CreateReply();
-            //resposta.Attachments.Clear();
-            var card =  CriaFormulario("Titulo1");
+            
+
+            string[] opcoes = { "opcao1", "opcao2", "opcao3" };
+            var card = CriarFormButton(opcoes);
             resposta.Attachments.Add(card);
 
-            
+
 
             //Aqui vou analisar o retorno
             var retorno =  VerificaRetorno(activity.Text);
@@ -37,17 +46,21 @@ namespace FormCard.Dialogs
 
             }
             await context.PostAsync(resposta);
+
         }
 
         Attachment VerificaRetorno(string text)
         {
+
             if(text.Equals("opcao1", StringComparison.InvariantCultureIgnoreCase))
             {
-                return CriaFormulario("retorno");
+                string[] teste = { "Valor X", "Valor Y", "Valor z" };
+                return CriarFormButton( teste);
             }
             if(text.Equals("opcao2", StringComparison.InvariantCultureIgnoreCase))
             {
-                return CriaFormulario("retorno");
+                string[] teste = { "Valor A", "Valor B", "Valor C" };
+                return CriarFormButton(teste);
             }
             else
             {
@@ -55,35 +68,60 @@ namespace FormCard.Dialogs
             }
         }
 
-        private Attachment CriaFormulario(string text)
+
+        private Attachment CriarFormButton(string [] text)
         {
+            var Buttons = new List<CardAction>();
+            foreach (var item in text)
+            {
+                Buttons.Add(new CardAction
+                {
+                    Title = item,
+                    Type = ActionTypes.PostBack,
+                    Value = item
+                });
+            }
+
             var heroCard = new HeroCard
             {
-                Buttons = new List<CardAction>
-            {
-                new CardAction
-                {
-                  Title = text,
-                  Type = ActionTypes.PostBack,
-                  Value = Opcao.opcao1.ToString()
-
-                },
-                new CardAction
-                {
-                    Title = "Titulo2",
-                    Type = ActionTypes.PostBack,
-                    Value = Opcao.opcao2.ToString()
-                }
-            }
+                Buttons = Buttons
             };
 
             return heroCard.ToAttachment();
         }
 
-        enum Opcao
-        {
-            opcao1 = 1,
-            opcao2
-        }
+
+        #region Obsoleto
+        //private Attachment CriaFormulario(string text)
+        //{
+        //    var heroCard = new HeroCard
+        //    {
+        //        Buttons = new List<CardAction>
+        //    {
+        //        new CardAction
+        //        {
+        //          Title = text,
+        //          Type = ActionTypes.PostBack,
+        //          Value =Opcao.opcao1.ToString()
+
+        //        },
+        //        new CardAction
+        //        {
+        //            Title = "Titulo2",
+        //            Type = ActionTypes.PostBack,
+        //            Value = Opcao.opcao2.ToString()
+        //        }
+        //    }
+        //    };
+
+        //    return heroCard.ToAttachment();
+        //}
+
+        //enum Opcao
+        //{
+        //    opcao1 = 1,
+        //    opcao2
+        //}
+        #endregion
     }
 }
