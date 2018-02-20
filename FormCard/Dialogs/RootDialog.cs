@@ -12,7 +12,7 @@ namespace FormCard.Dialogs
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
-            //
+
             return Task.CompletedTask;
         }
 
@@ -20,24 +20,28 @@ namespace FormCard.Dialogs
         {
             var activity = await result as Activity;
 
-            if (activity.Text.Contains("Valor X") || activity.Text.Contains("Valor A"))
+            if (activity.Text.Equals("Batata",StringComparison.InvariantCultureIgnoreCase))
             {
                 await context.PostAsync("Fim do formulário <br/> Digite algo se quiser reiniciar ");
-                
+
                 return;
             }
 
             var resposta = activity.CreateReply();
-            
 
-            string[] opcoes = { "opcao1", "opcao2", "opcao3" };
+
+            List<string> opcoes = new List<string>
+            {
+                "opcao1",
+                "opcao2",
+                "opcao3"
+            };
+
             var card = CriarFormButton(opcoes);
             resposta.Attachments.Add(card);
-
-
-
+            
             //Aqui vou analisar o retorno
-            var retorno =  VerificaRetorno(activity.Text);
+            var retorno = VerificaRetorno(opcoes, activity.Text);
 
             if (retorno != null)
             {
@@ -49,27 +53,78 @@ namespace FormCard.Dialogs
 
         }
 
-        Attachment VerificaRetorno(string text)
+        Attachment VerificaRetorno(List<string> opcoes, string activity)
         {
+            string confere = string.Empty;
+            foreach (var item in opcoes)
+            {
+                if (item.Equals(activity))
+                    confere = item;
+            }
+            List<string> valores = new List<string>();
 
-            if(text.Equals("opcao1", StringComparison.InvariantCultureIgnoreCase))
+            
+            Attachment attachment = new Attachment();
+            switch (confere)
             {
-                string[] teste = { "Valor X", "Valor Y", "Valor z" };
-                return CriarFormButton( teste);
+                case "opcao1":
+                    valores.Add("Batata");
+                    valores.Add("Arroz");
+                    valores.Add("Carne");
+                    valores.Add("Feijão");
+                    attachment = CriarFormButton(valores);
+                    break;
+                case "opcao2":
+                    valores.Add("Batata");
+                    valores.Add("Peixe");
+                    valores.Add("Curry");
+                    valores.Add("Feijão");
+                    attachment = CriarFormButton(valores);
+                    break;
+                case "opcao3":
+                    valores.Add("Batata");
+                    valores.Add("Farofa");
+                    valores.Add("Tropeiro");
+                    attachment = CriarFormButton(valores);
+                    break;               
+                default:
+                    attachment = null;
+                    break;
             }
-            if(text.Equals("opcao2", StringComparison.InvariantCultureIgnoreCase))
-            {
-                string[] teste = { "Valor A", "Valor B", "Valor C" };
-                return CriarFormButton(teste);
-            }
-            else
-            {
-                return null;
-            }
+
+            //if(attachment!=null)
+                return attachment;
+            //return null;
         }
 
+        enum Valores
+        {
+            opcao1 = 1,
+            opcao2 = 2,
+            opcao3 = 3            
+        }
 
-        private Attachment CriarFormButton(string [] text)
+        //Attachment VerificaRetorno(string text)
+        //{
+
+        //    if(text.Equals("opcao1", StringComparison.InvariantCultureIgnoreCase))
+        //    {
+        //        string[] teste = { "Valor X", "Valor Y", "Valor z" };
+        //        return CriarFormButton(teste);
+        //    }
+        //    if(text.Equals("opcao2", StringComparison.InvariantCultureIgnoreCase))
+        //    {
+        //        string[] teste = { "Valor A", "Valor B", "Valor C" };
+        //        return CriarFormButton(teste);
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
+
+
+        private Attachment CriarFormButton(List<String> text)
         {
             var Buttons = new List<CardAction>();
             foreach (var item in text)
