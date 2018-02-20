@@ -20,7 +20,7 @@ namespace FormCard.Dialogs
         {
             var activity = await result as Activity;
 
-            if (activity.Text.Equals("Batata",StringComparison.InvariantCultureIgnoreCase))
+            if (activity.Text.Equals("Batata", StringComparison.InvariantCultureIgnoreCase))
             {
                 await context.PostAsync("Fim do formulário <br/> Digite algo se quiser reiniciar ");
 
@@ -39,7 +39,7 @@ namespace FormCard.Dialogs
 
             var card = CriarFormButton(opcoes);
             resposta.Attachments.Add(card);
-            
+
             //Aqui vou analisar o retorno
             var retorno = VerificaRetorno(opcoes, activity.Text);
 
@@ -63,7 +63,7 @@ namespace FormCard.Dialogs
             }
             List<string> valores = new List<string>();
 
-            
+
             Attachment attachment = new Attachment();
             switch (confere)
             {
@@ -86,43 +86,13 @@ namespace FormCard.Dialogs
                     valores.Add("Farofa");
                     valores.Add("Tropeiro");
                     attachment = CriarFormButton(valores);
-                    break;               
+                    break;
                 default:
                     attachment = null;
                     break;
             }
-
-            //if(attachment!=null)
-                return attachment;
-            //return null;
-        }
-
-        enum Valores
-        {
-            opcao1 = 1,
-            opcao2 = 2,
-            opcao3 = 3            
-        }
-
-        //Attachment VerificaRetorno(string text)
-        //{
-
-        //    if(text.Equals("opcao1", StringComparison.InvariantCultureIgnoreCase))
-        //    {
-        //        string[] teste = { "Valor X", "Valor Y", "Valor z" };
-        //        return CriarFormButton(teste);
-        //    }
-        //    if(text.Equals("opcao2", StringComparison.InvariantCultureIgnoreCase))
-        //    {
-        //        string[] teste = { "Valor A", "Valor B", "Valor C" };
-        //        return CriarFormButton(teste);
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-
+            return attachment;
+        }     
 
         private Attachment CriarFormButton(List<String> text)
         {
@@ -147,6 +117,26 @@ namespace FormCard.Dialogs
 
 
         #region Obsoleto
+
+        //Attachment VerificaRetorno(string text)
+        //{
+
+        //    if(text.Equals("opcao1", StringComparison.InvariantCultureIgnoreCase))
+        //    {
+        //        string[] teste = { "Valor X", "Valor Y", "Valor z" };
+        //        return CriarFormButton(teste);
+        //    }
+        //    if(text.Equals("opcao2", StringComparison.InvariantCultureIgnoreCase))
+        //    {
+        //        string[] teste = { "Valor A", "Valor B", "Valor C" };
+        //        return CriarFormButton(teste);
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
+
         //private Attachment CriaFormulario(string text)
         //{
         //    var heroCard = new HeroCard
